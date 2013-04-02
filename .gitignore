@@ -1,0 +1,7 @@
+# Compiler speak.
+libbus.a
+*.o
+
+# Swap files.
+*.swp
+
