@@ -18,8 +18,10 @@ struct AIFController;
 struct PIFController;
 struct RDRRAMController;
 struct ROMController;
-struct RSP;
 struct VIFController;
+
+struct RDP;
+struct RSP;
 struct VR4300;
 
 struct BusController {
@@ -27,6 +29,7 @@ struct BusController {
   struct PIFController *pif;
   struct RDRAMController *rdram;
   struct ROMController *rom;
+  struct RDP *rdp;
   struct RSP *rsp;
   struct VIFController *vif;
   struct VR4300 *vr4300;
@@ -37,6 +40,12 @@ struct BusController {
   struct MemoryMap *memoryMap4U;
   struct MemoryMap *memoryMap8;
 };
+
+struct BusController *CreateBus(
+  struct AIFController *, struct PIFController *,
+  struct RDRAMController *, struct ROMController *,
+  struct VIFController *, struct RDP *, struct RSP *,
+  struct VR4300 *);
 
 #endif
 

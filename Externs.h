@@ -29,6 +29,9 @@ int AIRegWrite(void *, uint32_t, void *);
 int CartRead(void *, uint32_t, void *);
 int CartWrite(void *, uint32_t, void *);
 
+int DPRegRead(void *, uint32_t, void *);
+int DPRegWrite(void *, uint32_t, void *);
+
 int MIRegRead(void *, uint32_t, void *);
 int MIRegWrite(void *, uint32_t, void *);
 
@@ -80,10 +83,12 @@ int VIRegWrite(void *, uint32_t, void *);
 void ConnectAIFToBus(struct AIFController *, struct BusController *);
 void ConnectPIFToBus(struct PIFController *, struct BusController *);
 void ConnectRDRAMToBus(struct RDRAMController *, struct BusController *);
+void ConnectRDPToBus(struct RDP *, struct BusController *);
 void ConnectROMToBus(struct ROMController *, struct BusController *);
 void ConnectRSPToBus(struct RSP *, struct BusController *);
 void ConnectVIFToBus(struct VIFController *, struct BusController *);
 void ConnectVR4300ToBus(struct VR4300 *, struct BusController *);
+void ConnectRDPtoRSP(struct RSP *, struct RDP *);
 
 void CopyFromDRAM(struct RDRAMController *, void *, uint32_t, size_t);
 void CopyToDRAM(struct RDRAMController *, uint32_t, const void *, size_t);

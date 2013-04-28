@@ -15,6 +15,10 @@
 #define AI_REGS_BASE_ADDRESS      0x04500000
 #define AI_REGS_ADDRESS_LEN       0x00000018
 
+/* Display Processor Registers. */
+#define DP_REGS_BASE_ADDRESS      0x04100000
+#define DP_REGS_ADDRESS_LEN       0x00000020
+
 /* MIPS Interface Registers. */
 #define MI_REGS_BASE_ADDRESS      0x04300000
 #define MI_REGS_ADDRESS_LEN       0x00000010

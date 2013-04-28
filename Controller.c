@@ -23,8 +23,8 @@
 
 static int InitBus(
   struct BusController *, struct AIFController *, struct PIFController *,
-  struct RDRAMController *, struct ROMController *, struct RSP *,
-  struct VIFController *vif, struct VR4300 *);
+  struct RDRAMController *, struct ROMController *, struct VIFController *,
+  struct RDP *, struct RSP *, struct VR4300 *);
 
 /* ============================================================================
  *  BusClearRCPInterrupt: Clears an RCP interrupt flag.
@@ -54,7 +54,9 @@ BusGetRDRAMPointer(struct BusController *bus) {
 struct BusController *
 CreateBus(struct AIFController *aif, struct PIFController *pif,
   struct RDRAMController *rdram, struct ROMController *rom,
-  struct RSP *rsp, struct VIFController *vif, struct VR4300 *vr4300) {
+  struct VIFController *vif, struct RDP *rdp, struct RSP *rsp,
+  struct VR4300 *vr4300) {
+
   struct BusController *controller;
   size_t allocSize = sizeof(*controller);
 
@@ -63,7 +65,7 @@ CreateBus(struct AIFController *aif, struct PIFController *pif,
     return NULL;
   }
 
-  if (InitBus(controller, aif, pif, rdram, rom, rsp, vif, vr4300)) {
+  if (InitBus(controller, aif, pif, rdram, rom, vif, rdp, rsp, vr4300)) {
     free(controller);
     return NULL;
   }
@@ -90,8 +92,8 @@ DestroyBus(struct BusController *controller) {
 static int
 InitBus(struct BusController *controller, struct AIFController *aif,
   struct PIFController *pif, struct RDRAMController *rdram,
-  struct ROMController *rom, struct RSP *rsp, struct VIFController *vif,
-  struct VR4300 *vr4300) {
+  struct ROMController *rom, struct VIFController *vif,
+  struct RDP *rdp, struct RSP *rsp, struct VR4300 *vr4300) {
 
   debug("Initializing Bus.");
   memset(controller, 0, sizeof(*controller));
@@ -119,7 +121,7 @@ InitBus(struct BusController *controller, struct AIFController *aif,
     rdram, RDRAMReadHWord, RDRAMWriteHWord);
 
   /* Round up all the word-addressable read/write functions. */
-  if ((controller->memoryMap4 = CreateMemoryMap(15)) == NULL) {
+  if ((controller->memoryMap4 = CreateMemoryMap(16)) == NULL) {
     DestroyMemoryMap(controller->memoryMap1);
     DestroyMemoryMap(controller->memoryMap2);
     return 1;
@@ -128,6 +130,10 @@ InitBus(struct BusController *controller, struct AIFController *aif,
   MapAddressRange(controller->memoryMap4,
     AI_REGS_BASE_ADDRESS, AI_REGS_ADDRESS_LEN,
     aif, AIRegRead, AIRegWrite);
+
+  MapAddressRange(controller->memoryMap4,
+    DP_REGS_BASE_ADDRESS, DP_REGS_ADDRESS_LEN,
+    rdp, DPRegRead, DPRegWrite);
 
   MapAddressRange(controller->memoryMap4,
     MI_REGS_BASE_ADDRESS, MI_REGS_ADDRESS_LEN,
@@ -216,8 +222,10 @@ InitBus(struct BusController *controller, struct AIFController *aif,
   controller->pif = pif;
   controller->rdram = rdram;
   controller->rom = rom;
-  controller->rsp = rsp;
   controller->vif = vif;
+
+  controller->rdp = rdp;
+  controller->rsp = rsp;
   controller->vr4300 = vr4300;
 
   /* Hardware should be initialized now. */
@@ -229,8 +237,11 @@ InitBus(struct BusController *controller, struct AIFController *aif,
   ConnectRDRAMToBus(rdram, controller);
   ConnectROMToBus(rom, controller);
   ConnectVIFToBus(vif, controller);
-  ConnectVR4300ToBus(vr4300, controller);
+
+  ConnectRDPToBus(rdp, controller);
   ConnectRSPToBus(rsp, controller);
+  ConnectRDPtoRSP(rsp, rdp);
+  ConnectVR4300ToBus(vr4300, controller);
 
   return 0;
 }
