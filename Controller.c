@@ -1,5 +1,5 @@
 /* ============================================================================
- *  Controller.h: Bus controller.
+ *  Controller.c: Bus controller.
  *
  *  BUSSIM: Reality Co-Processor BUS SIMulator.
  *  Copyright (C) 2013, Tyler J. Stachecki.
