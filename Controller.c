@@ -251,8 +251,6 @@ InitBus(struct BusController *controller, struct AIFController *aif,
  * ========================================================================= */
 void DMAFromDRAM(struct BusController *bus,
   void *dest, uint32_t source, uint32_t size) {
-
-  debug("[HACK] Copying payload from DRAM.");
   CopyFromDRAM(bus->rdram, dest, source, size);
 }
 
@@ -261,8 +259,6 @@ void DMAFromDRAM(struct BusController *bus,
  * ========================================================================= */
 void DMAToDRAM(struct BusController *bus,
   uint32_t dest, const void *source, size_t size) {
-
-  debug("[HACK] Copying payload to DRAM.");
   CopyToDRAM(bus->rdram, dest, source, size);
 }
 
