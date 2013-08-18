@@ -99,8 +99,12 @@ InitBus(struct BusController *controller, struct AIFController *aif,
   memset(controller, 0, sizeof(*controller));
 
   /* Round up all the byte-addressable read/write functions. */
-  if ((controller->memoryMap1 = CreateMemoryMap(2)) == NULL)
+  if ((controller->memoryMap1 = CreateMemoryMap(3)) == NULL)
     return 1;
+
+  MapAddressRange(controller->memoryMap1,
+    PIF_RAM_BASE_ADDRESS, PIF_RAM_ADDRESS_LEN,
+    pif, PIFRAMReadByte, PIFRAMWriteByte);
 
   MapAddressRange(controller->memoryMap1,
     RDRAM_BASE_ADDRESS, RDRAM_ADDRESS_LEN,
@@ -111,10 +115,14 @@ InitBus(struct BusController *controller, struct AIFController *aif,
     rsp, RSPIMemReadByte, RSPIMemWriteByte);
 
   /* Round up all the halfword-addressable read/write functions. */
-  if ((controller->memoryMap2 = CreateMemoryMap(1)) == NULL) {
+  if ((controller->memoryMap2 = CreateMemoryMap(2)) == NULL) {
     DestroyMemoryMap(controller->memoryMap1);
     return 1;
   }
+
+  MapAddressRange(controller->memoryMap2,
+    PIF_RAM_BASE_ADDRESS, PIF_RAM_ADDRESS_LEN,
+    pif, PIFRAMReadHWord, PIFRAMWriteHWord);
 
   MapAddressRange(controller->memoryMap2,
     RDRAM_BASE_ADDRESS, RDRAM_ADDRESS_LEN,
@@ -141,7 +149,7 @@ InitBus(struct BusController *controller, struct AIFController *aif,
 
   MapAddressRange(controller->memoryMap4,
     PIF_RAM_BASE_ADDRESS, PIF_RAM_ADDRESS_LEN,
-    pif, PIFRAMRead, PIFRAMWrite);
+    pif, PIFRAMReadWord, PIFRAMWriteWord);
 
   MapAddressRange(controller->memoryMap4,
     PIF_ROM_BASE_ADDRESS, PIF_ROM_ADDRESS_LEN,
@@ -270,7 +278,7 @@ uint8_t BusReadByte(const struct BusController *bus, uint32_t address) {
   uint8_t byte;
 
   if ((mapping = ResolveMappedAddress(bus->memoryMap1, address)) == NULL) {
-    debugarg("Read BYTE to unmapped address [0x%.8x].", address);
+    debugarg("Read BYTE from unmapped address [0x%.8x].", address);
     return 0;
   }
 

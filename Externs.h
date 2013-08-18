@@ -35,8 +35,12 @@ int DPRegWrite(void *, uint32_t, void *);
 int MIRegRead(void *, uint32_t, void *);
 int MIRegWrite(void *, uint32_t, void *);
 
-int PIFRAMRead(void *, uint32_t, void *);
-int PIFRAMWrite(void *, uint32_t, void *);
+int PIFRAMReadByte(void *, uint32_t, void *);
+int PIFRAMWriteByte(void *, uint32_t, void *);
+int PIFRAMReadHWord(void *, uint32_t, void *);
+int PIFRAMWriteHWord(void *, uint32_t, void *);
+int PIFRAMReadWord(void *, uint32_t, void *);
+int PIFRAMWriteWord(void *, uint32_t, void *);
 
 int PIFROMRead(void *, uint32_t, void *);
 int PIFROMWrite(void *, uint32_t, void *);
