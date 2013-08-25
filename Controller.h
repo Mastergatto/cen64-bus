@@ -34,11 +34,7 @@ struct BusController {
   struct VIFController *vif;
   struct VR4300 *vr4300;
 
-  struct MemoryMap *memoryMap1;
-  struct MemoryMap *memoryMap2;
-  struct MemoryMap *memoryMap4;
-  struct MemoryMap *memoryMap4U;
-  struct MemoryMap *memoryMap8;
+  struct MemoryMap *memoryMaps[5];
 };
 
 struct BusController *CreateBus(

@@ -18,11 +18,6 @@
 #include <stddef.h>
 #endif
 
-struct UnalignedData {
-  uint32_t data;
-  size_t size;
-};
-
 int AIRegRead(void *, uint32_t, void *);
 int AIRegWrite(void *, uint32_t, void *);
 
@@ -56,7 +51,6 @@ int RDRAMReadHWord(void *, uint32_t, void *);
 int RDRAMWriteHWord(void *, uint32_t, void *);
 int RDRAMReadWord(void *, uint32_t, void *);
 int RDRAMWriteWord(void *, uint32_t, void *);
-int RDRAMReadWordUnaligned(void *, uint32_t, void *);
 int RDRAMWriteWordUnaligned(void *, uint32_t, void *);
 
 int RDRAMRegRead(void *, uint32_t, void *);
@@ -97,7 +91,7 @@ void ConnectRDPtoRSP(struct RSP *, struct RDP *);
 void CopyFromDRAM(struct RDRAMController *, void *, uint32_t, size_t);
 void CopyToDRAM(struct RDRAMController *, uint32_t, const void *, size_t);
 
-const uint8_t *GetRDRAMMemoryPointer(struct RDRAMController *);
+const uint8_t *GetRDRAMMemoryPointer(const struct RDRAMController *);
 void VR4300ClearRCPInterrupt(struct VR4300 *, unsigned);
 void VR4300RaiseRCPInterrupt(struct VR4300 *, unsigned);
 
