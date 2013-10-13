@@ -191,7 +191,7 @@ const struct MemoryMapping*
 ResolveMappedAddress(const struct MemoryMap *map, uint32_t address) {
   const struct MemoryMapNode *cur = map->root;
 
-  while (cur != map->nil) {
+  do {
     if (address < cur->mapping.start)
       cur = cur->left;
     else if (address > cur->mapping.end)
@@ -199,7 +199,7 @@ ResolveMappedAddress(const struct MemoryMap *map, uint32_t address) {
 
     else
       return &cur->mapping;
-  }
+  } while (cur != map->nil);
 
   return NULL;
 }
